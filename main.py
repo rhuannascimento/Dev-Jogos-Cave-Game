@@ -102,22 +102,33 @@ class Local(object):
         return self.getDescricao()
 
 
-# Função main
 if __name__ == "__main__":
-    # Obtém as estruturas de dados necessárias para a execução do jogo
     locais, palavras, tabelaDeslocamento = carregaDados()
 
-    # Define a posição inicial do jogador como sendo o Local 1
     pos_jogador = 1
 
-    # Usuário digita uma palavra válida
-    comando = input("Digite um comando: ")
+    print("Bem-vindo à Caverna!\n")
+    while True:
+        print(f"\nLocal atual: {locais[pos_jogador].getDescricao().strip()}")
+        comando = input("Digite um comando (ou 'ajuda' para ver opções): ").strip()
 
-    # Encontra o id correspondente à palavra digitada (o método upper() converte a palavra para maiúsculas)
-    id_palavra = palavras[comando.upper()]
+        if comando.lower() in ["ajuda", "comandos"]:
+            print("\nComandos válidos: n, s, e, w")
+            print("\nDigite um dos comandos acima para se mover ou interagir.")
+            continue
 
-    # Encontra o destino a partir da palavra digitada, caso a palavra seja válida
-    destino = locais[pos_jogador].getDestino(id_palavra)
+        if not comando:
+            print("Digite algum comando.")
+            continue
 
-    # Imprime o local
-    print(locais[destino])
+        id_palavra = palavras.get(comando.upper())
+        if id_palavra is None:
+            print("Comando inválido. Digite 'ajuda' para ver os comandos válidos.")
+            continue
+
+        destino = locais[pos_jogador].getDestino(id_palavra)
+        if destino is None or destino not in locais:
+            print("Não é possível ir para esse local, tente outros.")
+            continue
+
+        pos_jogador = destino
